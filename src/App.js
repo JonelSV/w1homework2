@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import Grocery from './Grocery';
 import products from './data';
+import Purchased from './Purchased';
 import './App.css'
 
 
 
 class App extends Component {
+
+  
+state = {
+  products: products,
+  item: '',
+  quantity: 0,
+  units: '',
+  purchasedItems: []
+}
 
   handleChange = (event) => {
     this.setState({
@@ -19,7 +29,8 @@ class App extends Component {
     const newItem = {
       item: this.state.item,
       quantity: this.state.quantity,
-      units: this.state.units
+      units: this.state.units,
+      isPurchased: true,
     }
     this.setState({
       item: '',
@@ -30,13 +41,11 @@ class App extends Component {
     })
   };
 
+  addToPurchased = (item) => {
+    this.setState({purchasedItems: [item, ...this.state.purchasedItems]})
+  }
+
   
-state = {
-  products: products,
-  item: '',
-  quantity: 0,
-  units: ''
-}
  
   render() {
     console.log(products)
@@ -58,30 +67,41 @@ state = {
                             id="units" placeholder="Enter Units e.g. pounds, pieces" />
                     <br />
                     <input type="submit" value="Add To List"/>
-
                   </form>
+
+
                 </div>
               <h3>Items in the cart</h3>
               <div id="mainContainer">
-                  {this.state.products.map((products) =>{
+                  {this.state.products.map((products, index) =>{
                     return (
 
                   
-                      <Grocery products={products}/>
-
+                      <Grocery key={index} products={products} handleAdd={this.addToPurchased} />
+                  
                     
                     )
                   })}
-
-                
-                    
-                      
-                    
-              
-                  
-
-
               </div>
+              <div id="puchased-container">
+
+
+                 
+              
+                  {
+                    this.state.purchasedItems.map((item, index) => {
+                      return(
+                   
+                        <h3>Purchased: {this.state.purchasedItems} <Purchased key={index} item={item} />  </h3>
+              
+                      )
+                    })
+                  }
+             
+              </div>
+     
+
+              
       </div>
     )
   }
